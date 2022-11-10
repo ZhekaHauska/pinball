@@ -1,6 +1,8 @@
 # pinball
 Pinball is an environment written on Godot for testing artificial agents.
 
+![pinball user interface](assets/pinball.gif)
+
 ## Entities
 
 ```
