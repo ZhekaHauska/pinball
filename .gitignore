@@ -1,0 +1,7 @@
+.import/*
+*.import
+*.translation
+export_presets.cfg
+builds/*
+*.blend
+
