@@ -8,4 +8,3 @@ func get_camera_pixel_encoding():
 
 func get_camera_shape()-> Array:
 	return [$Viewport.size[1], $Viewport.size[0], 4]
-

@@ -35,10 +35,16 @@ func _ready():
 	
 	if connected:
 		print('connected')
+		
+		config_path = args.get('config', null)
+		if config_path:
+			config_dict = load_json_data(config_path)
+			if config_dict:
+				setup_environment(config_dict)
 	else:
 		print('connection failed')
 	
-	$GUI/Settings.popup()
+		$GUI/Settings.popup()
 	
 func _input(event):
 	if Input.is_action_just_pressed("reset"):
@@ -47,8 +53,9 @@ func _input(event):
 	if Input.is_action_just_pressed("settings"):
 		$GUI/Settings.popup()
 		
-func _physics_process(delta):
+func _process(delta):
 	if connected:
+		
 		var message = _get_dict_json_message()
 		
 		if message:
@@ -65,6 +72,12 @@ func _physics_process(delta):
 			
 				_send_dict_as_json_message(reply)
 				get_tree().set_pause(false)
+			if message['type'] == 'act':
+				var action = message['action']
+				$Agent.act(action[0], action[1])
+			
+			if message['type'] == 'reset':
+				reset()
 
 func reset():
 	$Ball.translation = initial_ball_position
@@ -194,21 +207,18 @@ func _send_dict_as_json_message(dict):
 	client.put_string(to_json(dict))
 
 func _get_dict_json_message():
-	# returns a dictionary from of the most recent message
-	# this is not waiting
-	while client.get_available_bytes() == 0:
+	if client.get_available_bytes() == 0:
 		if client.get_status() == 3:
 			print("server disconnected status 3, closing")
 			get_tree().quit()
-			return null
-
+		
 		if !client.is_connected_to_host():
 			print("server disconnected, closing")
 			get_tree().quit()
-			return null
-		OS.delay_usec(10)
 		
-	var message = client.get_string()
-	var json_data = JSON.parse(message).result
-	
-	return json_data
+		return null
+	else:
+		var message = client.get_string()
+		var json_data = JSON.parse(message).result
+		
+		return json_data

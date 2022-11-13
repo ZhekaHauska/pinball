@@ -63,7 +63,7 @@ class Pinball:
 
     def act(self, action):
         message = {
-            'type': 'action',
+            'type': 'act',
             'action': action
         }
         self._send_as_json(message)
@@ -128,14 +128,3 @@ class Pinball:
             print("env timed out", e)
 
         return None
-
-
-if __name__ == '__main__':
-    env = Pinball()
-    for i in range(5):
-        time.sleep(1)
-        im = env.obs()
-
-        plt.imshow(im)
-        plt.show()
-

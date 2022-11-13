@@ -1,6 +1,6 @@
 extends Spatial
 
-export var speed = 1.0
+export var magnitude = 1.0
 var direction = Vector3.FORWARD
 
 func _physics_process(delta):
@@ -10,4 +10,8 @@ func _physics_process(delta):
 		rotation.y -= 0.01
 	if Input.is_action_just_pressed("fire"):
 		direction = Vector3.FORWARD.rotated(Vector3.UP, rotation.y)
-		get_node("../Ball").apply_central_impulse(direction * speed)
+		get_node("../Ball").apply_central_impulse(direction * magnitude)
+
+func act(angle, magnitude):
+	direction = Vector3.FORWARD.rotated(Vector3.UP, angle)
+	get_node("../Ball").apply_central_impulse(direction * magnitude)
