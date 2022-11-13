@@ -1,0 +1,7 @@
+[gd_resource type="Environment" format=2]
+
+[resource]
+ambient_light_energy = 0.0
+glow_enabled = true
+glow_bloom = 0.15
+glow_hdr_threshold = 0.58
