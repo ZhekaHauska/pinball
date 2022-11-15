@@ -3,7 +3,7 @@ extends Spatial
 var DEFAULT_HOST = "127.0.0.1"
 var DEFAULT_PORT = 5555
 
-export var initial_ball_position = Vector3.ZERO
+export var initial_ball_position = Vector3(0, 0.779, 0)
 var config_path = null
 var config_dict = null
 
@@ -28,6 +28,11 @@ func _get_args():
 
 func _ready():
 	args = _get_args()
+	
+	var seed_ = args.get('seed', null)
+	if seed_:
+		seed(seed_)
+	
 	connected = connect_to_server(
 		args.get('host', DEFAULT_HOST), 
 		args.get('port', DEFAULT_PORT)
@@ -41,6 +46,8 @@ func _ready():
 			config_dict = load_json_data(config_path)
 			if config_dict:
 				setup_environment(config_dict)
+			else:
+				print('config file not found')
 	else:
 		print('connection failed')
 	
@@ -78,11 +85,24 @@ func _process(delta):
 			
 			if message['type'] == 'reset':
 				reset()
+			
+			if message['type'] == 'set_config':
+				config_path = message['config_path']
+				print(config_path)
+				config_dict = load_json_data(config_path)
+				if config_dict:
+					get_tree().set_pause(true)
+					setup_environment(config_dict)
+					get_tree().set_pause(false)
+				else:
+					print('config file not found')
 
 func reset():
 	$Ball.translation = initial_ball_position
 	$Ball.angular_velocity = Vector3.ZERO
 	$Ball.linear_velocity = Vector3.ZERO
+	for att in $Attractors.get_children():
+		att.attracted_body = null
 
 func load_json_data(path):
 	var file = File.new()

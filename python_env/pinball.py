@@ -8,7 +8,7 @@ import atexit
 import time
 import json
 import numpy as np
-import matplotlib.pyplot as plt
+import subprocess
 
 HOST = "127.0.0.1"
 PORT = 5555
@@ -23,16 +23,28 @@ class Pinball:
             headless: bool = True,
             host: str = HOST,
             port: int = PORT,
-            timeout: float = TIMEOUT
+            framerate: int = None,
+            timeout: float = TIMEOUT,
+            seed: int = None
     ):
+        self.exe_path = exe_path
         self.config_path = config_path
         self.headless = headless
         self.host = host
         self.port = port
         self.timeout = timeout
+        self.seed = seed
 
         if exe_path is not None:
-            ...  # run path, apply headless and config path
+            self._launch_env(
+                exe_path,
+                config_path,
+                host,
+                port,
+                headless,
+                framerate,
+                seed
+            )
 
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
             s.bind((self.host, self.port))
@@ -44,6 +56,9 @@ class Pinball:
             print(
                 f'connected {addr}'
             )
+
+            if self.config_path is not None:
+                self.set_config(self.config_path)
 
         atexit.register(self.close)
 
@@ -71,6 +86,13 @@ class Pinball:
     def reset(self):
         message = {
             'type': 'reset'
+        }
+        self._send_as_json(message)
+
+    def set_config(self, config_path):
+        message = {
+            'type': 'set_config',
+            'config_path': config_path
         }
         self._send_as_json(message)
 
@@ -128,3 +150,25 @@ class Pinball:
             print("env timed out", e)
 
         return None
+
+    def _launch_env(self, env_path, config_path, host, port, headless, framerate, seed):
+        launch_cmd = f"{env_path}"
+
+        if config_path is not None:
+            launch_cmd += f" --config={config_path}"
+        if host is not None:
+            launch_cmd += f" --host={host}"
+        if port is not None:
+            launch_cmd += f" --port={port}"
+        if headless:
+            launch_cmd += " --disable-render-loop --no-window"
+        if framerate is not None:
+            launch_cmd += f" --fixed-fps {framerate}"
+        if seed is not None:
+            launch_cmd += f" --seed={seed}"
+
+        launch_cmd = launch_cmd.split(" ")
+        self.proc = subprocess.Popen(
+            launch_cmd,
+            start_new_session=True,
+        )
