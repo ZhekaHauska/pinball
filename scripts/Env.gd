@@ -13,6 +13,7 @@ var att_scene = load("res://scenes/Attractor.tscn")
 var client: StreamPeerTCP = null
 var args = null
 var connected = false
+var wait_client = false
 
 
 func _get_args():
@@ -28,14 +29,17 @@ func _get_args():
 
 func _ready():
 	args = _get_args()
+	print(args)
 	
 	var seed_ = args.get('seed', null)
 	if seed_:
-		seed(seed_)
+		seed(int(seed_))
+	
+	wait_client = bool(args.get('sync', false))
 	
 	connected = connect_to_server(
 		args.get('host', DEFAULT_HOST), 
-		args.get('port', DEFAULT_PORT)
+		int(args.get('port', DEFAULT_PORT))
 	)
 	
 	if connected:
@@ -226,19 +230,23 @@ func connect_to_server(ip, port):
 func _send_dict_as_json_message(dict):
 	client.put_string(to_json(dict))
 
-func _get_dict_json_message():
-	if client.get_available_bytes() == 0:
+func _get_dict_json_message():	
+	while client.get_available_bytes() == 0:
 		if client.get_status() == 3:
 			print("server disconnected status 3, closing")
 			get_tree().quit()
-		
+			return null
+
 		if !client.is_connected_to_host():
 			print("server disconnected, closing")
 			get_tree().quit()
+			return null
+		OS.delay_usec(10)
 		
-		return null
-	else:
-		var message = client.get_string()
-		var json_data = JSON.parse(message).result
+		if not wait_client:
+			return null
+	
+	var message = client.get_string()
+	var json_data = JSON.parse(message).result
 		
-		return json_data
+	return json_data

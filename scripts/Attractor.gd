@@ -18,10 +18,6 @@ func _process(delta):
 		else:
 			delay += delta
 
-func _input(event):
-	if Input.is_action_just_pressed("reset"):
-		attracted_body = null
-
 func _on_Attractor_body_entered(body):
 	$AnimationPlayer.play("interact")
 	attracted_body = body
@@ -29,5 +25,7 @@ func _on_Attractor_body_entered(body):
 func _on_Attractor_body_exited(body):
 	$AnimationPlayer.play("RESET")
 	attracted_body = null
+
+
 
 

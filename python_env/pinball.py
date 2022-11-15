@@ -24,6 +24,7 @@ class Pinball:
             host: str = HOST,
             port: int = PORT,
             framerate: int = None,
+            sync: bool = False,
             timeout: float = TIMEOUT,
             seed: int = None
     ):
@@ -43,6 +44,7 @@ class Pinball:
                 port,
                 headless,
                 framerate,
+                sync,
                 seed
             )
 
@@ -151,7 +153,7 @@ class Pinball:
 
         return None
 
-    def _launch_env(self, env_path, config_path, host, port, headless, framerate, seed):
+    def _launch_env(self, env_path, config_path, host, port, headless, framerate, sync, seed):
         launch_cmd = f"{env_path}"
 
         if config_path is not None:
@@ -164,8 +166,12 @@ class Pinball:
             launch_cmd += " --disable-render-loop --no-window"
         if framerate is not None:
             launch_cmd += f" --fixed-fps {framerate}"
+        if sync:
+            launch_cmd += f" --sync=true"
         if seed is not None:
             launch_cmd += f" --seed={seed}"
+
+        print(launch_cmd)
 
         launch_cmd = launch_cmd.split(" ")
         self.proc = subprocess.Popen(
