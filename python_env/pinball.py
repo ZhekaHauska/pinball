@@ -16,6 +16,8 @@ class Pinball:
             exe_path: str = None,
             config_path: str = None,
             headless: bool = True,
+            size_x: int = None,
+            size_y: int = None,
             host: str = HOST,
             port: int = PORT,
             framerate: int = None,
@@ -26,6 +28,8 @@ class Pinball:
         self.exe_path = exe_path
         self.config_path = config_path
         self.headless = headless
+        self.size_x = size_x
+        self.size_y = size_y
         self.host = host
         self.port = port
         self.timeout = timeout
@@ -38,6 +42,8 @@ class Pinball:
                 host,
                 port,
                 headless,
+                size_x,
+                size_y,
                 framerate,
                 sync,
                 seed
@@ -148,7 +154,19 @@ class Pinball:
 
         return None
 
-    def _launch_env(self, env_path, config_path, host, port, headless, framerate, sync, seed):
+    def _launch_env(
+            self,
+            env_path,
+            config_path,
+            host,
+            port,
+            headless,
+            size_x,
+            size_y,
+            framerate,
+            sync,
+            seed
+    ):
         launch_cmd = f"{env_path}"
 
         if config_path is not None:
@@ -163,6 +181,10 @@ class Pinball:
             launch_cmd += f" --fixed-fps {framerate}"
         if sync:
             launch_cmd += f" --sync=true"
+        if size_x:
+            launch_cmd += f" --sizex={size_x}"
+        if size_y:
+            launch_cmd += f" --sizey={size_y}"
         if seed is not None:
             launch_cmd += f" --seed={seed}"
 

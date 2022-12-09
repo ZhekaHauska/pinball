@@ -2,6 +2,7 @@ extends Spatial
 
 var DEFAULT_HOST = "127.0.0.1"
 var DEFAULT_PORT = 5555
+var VP_RATIO = 36.0/50.0
 
 export var initial_ball_position = Vector3(0, 0.779, 0)
 var config_path = null
@@ -37,6 +38,19 @@ func _ready():
 	
 	wait_client = bool(args.get('sync', false))
 	
+	var view_size_x = args.get('sizex', null)
+	var view_size_y = args.get('sizey', null)
+	
+	if view_size_x:
+		view_size_x = int(view_size_x)
+		$RGBCameraSensor3D/Viewport.size.x = view_size_x
+		$RGBCameraSensor3D/Viewport.size.y = int(round(view_size_x / VP_RATIO))
+	
+	if view_size_y:
+		view_size_y = int(view_size_y)
+		$RGBCameraSensor3D/Viewport.size.x = int(round(view_size_y * VP_RATIO))
+		$RGBCameraSensor3D/Viewport.size.y = view_size_y
+		
 	connected = connect_to_server(
 		args.get('host', DEFAULT_HOST), 
 		int(args.get('port', DEFAULT_PORT))
