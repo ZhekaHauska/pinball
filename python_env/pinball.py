@@ -99,6 +99,14 @@ class Pinball:
         }
         self._send_as_json(message)
 
+    def set_sensor_size(self, size):
+        message = {
+            'type': 'set_sensor_size',
+            'sizex': size[0],
+            'sizey': size[1]
+        }
+        self._send_as_json(message)
+
     def close(self):
         message = {
             'type': 'close'

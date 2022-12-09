@@ -2,7 +2,6 @@ extends Spatial
 
 var DEFAULT_HOST = "127.0.0.1"
 var DEFAULT_PORT = 5555
-var VP_RATIO = 36.0/50.0
 
 export var initial_ball_position = Vector3(0, 0.779, 0)
 var config_path = null
@@ -41,15 +40,27 @@ func _ready():
 	var view_size_x = args.get('sizex', null)
 	var view_size_y = args.get('sizey', null)
 	
+	var vp_size = $RGBCameraSensor3D/Viewport.size
+	var vp_ratio = float(vp_size[0]) / float(vp_size[1])
+	 
 	if view_size_x:
 		view_size_x = int(view_size_x)
 		$RGBCameraSensor3D/Viewport.size.x = view_size_x
-		$RGBCameraSensor3D/Viewport.size.y = int(round(view_size_x / VP_RATIO))
+		
+		if view_size_y:
+			$RGBCameraSensor3D/Viewport.size.x = view_size_x
+		else:
+			$RGBCameraSensor3D/Viewport.size.y = int(round(view_size_x / vp_ratio))
 	
 	if view_size_y:
 		view_size_y = int(view_size_y)
-		$RGBCameraSensor3D/Viewport.size.x = int(round(view_size_y * VP_RATIO))
 		$RGBCameraSensor3D/Viewport.size.y = view_size_y
+		
+		if view_size_x:
+			$RGBCameraSensor3D/Viewport.size.x = view_size_x
+		else:
+			$RGBCameraSensor3D/Viewport.size.x = int(round(view_size_y * vp_ratio))
+		
 		
 	connected = connect_to_server(
 		args.get('host', DEFAULT_HOST), 
@@ -117,6 +128,13 @@ func _process(delta):
 					get_tree().set_pause(false)
 				else:
 					print('config file not found')
+			
+			if message['type'] == 'set_sensor_size':
+				var sizex = int(message['sizex'])
+				var sizey = int(message['sizey'])
+				var size = Vector2(sizex, sizey)
+				
+				_set_sensor_size(size)
 
 func reset():
 	$Ball.translation = initial_ball_position
@@ -219,6 +237,8 @@ func setup_environment(config_dict):
 		
 		$RandomForces.add_child(att_instance)
 		
+func _set_sensor_size(size):
+	$RGBCameraSensor3D/Viewport.size = size
 
 func _on_Settings_confirmed():
 	config_path = $GUI/Settings/VBoxContainer/PathContainer/DataPath.text
