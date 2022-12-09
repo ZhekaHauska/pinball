@@ -28,10 +28,6 @@ config/icon="res://icon.png"
 
 window/size/width=450
 
-[editor]
-
-main_run_args="--fixed-fps 300 --disable-render-loop --no-window --sync=true --port=5555 --host=127.0.0.1 --seed=1 --sizex=15"
-
 [gui]
 
 common/drop_mouse_on_gui_input_disabled=true
