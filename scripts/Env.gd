@@ -54,8 +54,11 @@ func _ready():
 				print('config file not found')
 	else:
 		print('connection failed')
-	
-		$GUI/Settings.popup()
+		
+		if not VisualServer.render_loop_enabled:
+			get_tree().quit()
+		else:
+			$GUI/Settings.popup()
 	
 func _input(event):
 	if Input.is_action_just_pressed("reset"):
