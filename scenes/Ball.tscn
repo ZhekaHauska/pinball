@@ -13,8 +13,6 @@ emission = Color( 0.941176, 0.956863, 1, 1 )
 emission_energy = 0.39
 emission_operator = 0
 emission_on_uv2 = false
-subsurf_scatter_enabled = true
-subsurf_scatter_strength = 1.0
 
 [node name="Ball" type="RigidBody"]
 mass = 2.0
