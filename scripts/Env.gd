@@ -88,6 +88,7 @@ func _ready():
 func _input(event):
 	if Input.is_action_just_pressed("reset"):
 		reset()
+		OS.delay_msec(50)
 	
 	if Input.is_action_just_pressed("settings"):
 		$GUI/Settings.popup()
@@ -137,11 +138,12 @@ func _process(delta):
 				_set_sensor_size(size)
 
 func reset():
+	for att in $Attractors.get_children():
+		att.attracted_body = null
+		
 	$Ball.translation = initial_ball_position
 	$Ball.angular_velocity = Vector3.ZERO
 	$Ball.linear_velocity = Vector3.ZERO
-	for att in $Attractors.get_children():
-		att.attracted_body = null
 
 func load_json_data(path):
 	var file = File.new()

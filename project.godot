@@ -27,6 +27,7 @@ config/icon="res://icon.png"
 [display]
 
 window/size/width=450
+window/vsync/use_vsync=false
 
 [gui]
 
