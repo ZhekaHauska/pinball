@@ -25,6 +25,7 @@ When ball enters ring area, `Attractor` slowes down the ball and attracts to its
  - `Ctrl+S` - open or save confgiuration
  - `Ctrl+R` - reset ball to initial position
  - `Left/Right arrow` - change direction of initial impulse
+ - `Up/Down arrow` - change magnitude of initial impulse
  - `Space` - apply initial impulse to ball
  
 ## Saving new configuration
