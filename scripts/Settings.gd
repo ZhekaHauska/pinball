@@ -30,3 +30,7 @@ func _on_Settings_about_to_show():
 
 func _on_Settings_popup_hide():
 	get_tree().set_pause(false)
+
+
+func _on_FileDialog_file_selected(path):
+	$VBoxContainer/PathContainer/DataPath.text = path
