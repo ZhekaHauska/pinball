@@ -6,3 +6,6 @@ builds/*
 *.blend
 python_env/.idea/*
 __pycache__
+*.egg-info
+*.pck
+Pinball.x86_64
