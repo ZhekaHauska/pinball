@@ -35,22 +35,30 @@ class Pinball:
         self.timeout = timeout
         self.seed = seed
 
-        if exe_path is not None:
-            self._launch_env(
-                exe_path,
-                config_path,
-                host,
-                port,
-                headless,
-                size_x,
-                size_y,
-                framerate,
-                sync,
-                seed
-            )
-
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-            s.bind((self.host, self.port))
+            while True:
+                try:
+                    s.bind((self.host, self.port))
+                    break
+
+                except OSError:
+                    self.port += 1
+                    if self.port > 49151:
+                        self.port = 1024
+
+            if exe_path is not None:
+                self._launch_env(
+                    exe_path,
+                    config_path,
+                    host,
+                    self.port,
+                    headless,
+                    size_x,
+                    size_y,
+                    framerate,
+                    sync,
+                    seed
+                )
 
             s.listen(1)
             s.settimeout(self.timeout)
@@ -60,8 +68,8 @@ class Pinball:
                 f'connected {addr}'
             )
 
-            if self.config_path is not None:
-                self.set_config(self.config_path)
+        if self.config_path is not None:
+            self.set_config(self.config_path)
 
         atexit.register(self.close)
 
