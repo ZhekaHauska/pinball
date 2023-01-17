@@ -3,12 +3,15 @@ extends Spatial
 export var magnitude = 1.0
 var direction = Vector3.FORWARD
 signal magnitude_changed
+signal angle_changed
 
 func _input(event):
 	if Input.is_action_pressed("turn_right"):
 		rotation.y += 0.01
+		emit_signal("angle_changed", rotation.y)
 	if Input.is_action_pressed("turn_left"):
 		rotation.y -= 0.01
+		emit_signal("angle_changed", rotation.y)		
 	if Input.is_action_pressed("increase_impulse"):
 		magnitude += 0.1
 		emit_signal("magnitude_changed", magnitude)
