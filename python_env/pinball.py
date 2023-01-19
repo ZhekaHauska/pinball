@@ -94,9 +94,10 @@ class Pinball:
         }
         self._send_as_json(message)
 
-    def reset(self):
+    def reset(self, position=None):
         message = {
-            'type': 'reset'
+            'type': 'reset',
+            'position': position
         }
         self._send_as_json(message)
 

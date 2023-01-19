@@ -117,7 +117,7 @@ func _process(delta):
 				$Agent.act(action[0], action[1])
 			
 			if message['type'] == 'reset':
-				reset()
+				reset(message['position'])
 			
 			if message['type'] == 'set_config':
 				config_path = message['config_path']
@@ -137,11 +137,19 @@ func _process(delta):
 				
 				_set_sensor_size(size)
 
-func reset():
+func reset(position=null):
 	for att in $Attractors.get_children():
 		att.attracted_body = null
+	
+	if position:
+		var pos = Vector3.ZERO
+		pos.y = initial_ball_position.y
+		pos.x = position[0]
+		pos.z = position[1]
+		$Ball.translation = pos
+	else:
+		$Ball.translation = initial_ball_position
 		
-	$Ball.translation = initial_ball_position
 	$Ball.angular_velocity = Vector3.ZERO
 	$Ball.linear_velocity = Vector3.ZERO
 
