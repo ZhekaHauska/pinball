@@ -29,6 +29,10 @@ config/icon="res://icon.png"
 window/size/width=450
 window/vsync/use_vsync=false
 
+[editor]
+
+main_run_args="--sync=true"
+
 [gui]
 
 common/drop_mouse_on_gui_input_disabled=true
