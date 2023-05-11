@@ -36,6 +36,14 @@ When ball enters ring area, `Attractor` slowes down the ball and attracts to its
 ## Python environment
 To use the environment in Python programms you can install Python module `python_env/pinball.py` using `python_env/setup.py`.
 
+Control of the environment is through `Pinball` class:
+- `obs()` - returns image observation array
+- `act([phi float, m float])` - apply impulse with direction `phi` in radians and magnitude `m`
+- `step()` - do one simulation step if run with `--sync=true` flag
+- `reset()` - return ball to initial position and zero velocity
+
+For more detailed API see the source code.
+
 To run the environment through Python you need to compile an executable file of the environment through Godot editor. The executable has several useful flags:
 
 - `--config=config_path` specify wich configuration you would like to run with
