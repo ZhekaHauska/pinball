@@ -94,6 +94,12 @@ class Pinball:
         }
         self._send_as_json(message)
 
+    def step(self):
+        message = {
+            'type': 'step'
+        }
+        self._send_as_json(message)
+
     def reset(self, position=None):
         message = {
             'type': 'reset',

@@ -98,44 +98,17 @@ func _process(delta):
 		
 		var message = _get_dict_json_message()
 		
-		if message:
-			if message['type'] == 'get_obs':
-				get_tree().set_pause(true) 
-				var obs = $RGBCameraSensor3D.get_camera_pixel_encoding()
-				var shape = $RGBCameraSensor3D.get_camera_shape()
+		if wait_client:
+			while message:
+				_message_handler(message)
 				
-				var reply = {
-					"type": "obs",
-					"obs": obs,
-					"shape": shape
-				}
-			
-				_send_dict_as_json_message(reply)
-				get_tree().set_pause(false)
-			if message['type'] == 'act':
-				var action = message['action']
-				$Agent.act(action[0], action[1])
-			
-			if message['type'] == 'reset':
-				reset(message['position'])
-			
-			if message['type'] == 'set_config':
-				config_path = message['config_path']
-				print(config_path)
-				config_dict = load_json_data(config_path)
-				if config_dict:
-					get_tree().set_pause(true)
-					setup_environment(config_dict)
-					get_tree().set_pause(false)
-				else:
-					print('config file not found')
-			
-			if message['type'] == 'set_sensor_size':
-				var sizex = int(message['sizex'])
-				var sizey = int(message['sizey'])
-				var size = Vector2(sizex, sizey)
-				
-				_set_sensor_size(size)
+				if message['type'] == 'step':
+					break
+					
+				message = _get_dict_json_message()
+		else:
+			if message:
+				_message_handler(message)
 
 func reset(position=null):
 	for att in $Attractors.get_children():
@@ -297,3 +270,43 @@ func _get_dict_json_message():
 	var json_data = JSON.parse(message).result
 		
 	return json_data
+
+func _message_handler(message):
+	if message['type'] == 'get_obs':
+		get_tree().set_pause(true) 
+		var obs = $RGBCameraSensor3D.get_camera_pixel_encoding()
+		var shape = $RGBCameraSensor3D.get_camera_shape()
+		
+		var reply = {
+			"type": "obs",
+			"obs": obs,
+			"shape": shape
+		}
+	
+		_send_dict_as_json_message(reply)
+		get_tree().set_pause(false)
+		
+	if message['type'] == 'act':
+		var action = message['action']
+		$Agent.act(action[0], action[1])
+	
+	if message['type'] == 'reset':
+		reset(message['position'])
+	
+	if message['type'] == 'set_config':
+		config_path = message['config_path']
+		print(config_path)
+		config_dict = load_json_data(config_path)
+		if config_dict:
+			get_tree().set_pause(true)
+			setup_environment(config_dict)
+			get_tree().set_pause(false)
+		else:
+			print('config file not found')
+	
+	if message['type'] == 'set_sensor_size':
+		var sizex = int(message['sizex'])
+		var sizey = int(message['sizey'])
+		var size = Vector2(sizex, sizey)
+		
+		_set_sensor_size(size) 
