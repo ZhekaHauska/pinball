@@ -63,3 +63,4 @@ anims/RESET = SubResource( 3 )
 anims/interact = SubResource( 4 )
 
 [connection signal="body_entered" from="." to="." method="_on_ForceArea_body_entered"]
+[connection signal="body_exited" from="." to="." method="_on_RandomForce_body_exited"]

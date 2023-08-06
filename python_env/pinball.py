@@ -84,8 +84,10 @@ class Pinball:
             response['obs'],
             response['shape']
         )
+        reward = response['reward']
+        is_terminal = response['is_terminal']
 
-        return obs
+        return obs, reward, is_terminal
 
     def act(self, action):
         message = {

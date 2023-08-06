@@ -14,6 +14,8 @@ var client: StreamPeerTCP = null
 var args = null
 var connected = false
 var wait_client = false
+var terminate = false
+var reward_decay = 0.0
 
 
 func _get_args():
@@ -93,7 +95,7 @@ func _input(event):
 	if Input.is_action_just_pressed("settings"):
 		$GUI/Settings.popup()
 		
-func _process(delta):
+func _process(delta):	
 	if connected:
 		
 		var message = _get_dict_json_message()
@@ -109,8 +111,15 @@ func _process(delta):
 		else:
 			if message:
 				_message_handler(message)
+	
+	if terminate:
+		reset()
 
 func reset(position=null):
+	$Agent.reward = 0
+	$Agent.emit_signal("got_reward", 0)
+	terminate = false
+	
 	for att in $Attractors.get_children():
 		att.attracted_body = null
 	
@@ -193,6 +202,12 @@ func setup_environment(config_dict):
 	for att_instance in $Attractors.get_children():
 		$Attractors.remove_child(att_instance)
 	
+	initial_ball_position = Vector3(
+		config_dict['initial_ball_position'][0],
+		config_dict['initial_ball_position'][1],
+		config_dict['initial_ball_position'][2]
+	)
+	reward_decay = config_dict['reward_decay']
 	var random_forces = config_dict['rf']
 	var attractors = config_dict['att']
 	
@@ -205,6 +220,8 @@ func setup_environment(config_dict):
 			)
 		rf_instance.strength = random_force['strength']
 		rf_instance.angles = random_force['angles']
+		rf_instance.reward = random_force['reward']
+		rf_instance.terminal = random_force['terminal']
 		
 		$RandomForces.add_child(rf_instance)
 	
@@ -217,6 +234,8 @@ func setup_environment(config_dict):
 			)
 		att_instance.strength = attractor['strength']
 		att_instance.frequency = attractor['freq']
+		att_instance.reward = attractor['reward']
+		att_instance.terminal = attractor['terminal']
 		
 		$RandomForces.add_child(att_instance)
 		
@@ -276,11 +295,14 @@ func _message_handler(message):
 		get_tree().set_pause(true) 
 		var obs = $RGBCameraSensor3D.get_camera_pixel_encoding()
 		var shape = $RGBCameraSensor3D.get_camera_shape()
+		var reward = $Agent.reward + reward_decay
 		
 		var reply = {
 			"type": "obs",
 			"obs": obs,
-			"shape": shape
+			"shape": shape,
+			"reward": reward,
+			"is_terminal": terminate
 		}
 	
 		_send_dict_as_json_message(reply)

@@ -1,9 +1,11 @@
 extends Spatial
 
 export var magnitude = 1.0
+var reward = 0.0
 var direction = Vector3.FORWARD
 signal magnitude_changed
 signal angle_changed
+signal got_reward
 
 func _input(event):
 	if Input.is_action_pressed("turn_right"):
