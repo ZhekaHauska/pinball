@@ -9,6 +9,8 @@ Pinball is an environment written on Godot for testing artificial agents.
 RandomForce:
       angles: [phi1, phi2, ...]
       strength: m
+      reward: r
+      terminal: is_terminal
 ```
 When ball enters ring area, `RandomFroce` uniformly choses a direction from `angles` and applies impluse of magnitude `m`.
 
@@ -16,9 +18,14 @@ When ball enters ring area, `RandomFroce` uniformly choses a direction from `ang
 Attractor:
       strength: m
       frequency: f
+      reward: r
+      terminal: is_terminal
 ```
 When ball enters ring area, `Attractor` slowes down the ball and attracts to its center with frequency `f`.
 
+Both entities have fields: 
+- `reward` - `r` is amount of reward that agent gets by entering the area
+- `terminal` - if `is_terminal==true`, ball resets the environment by entering the area  
 
 ## Control
 
@@ -37,10 +44,10 @@ When ball enters ring area, `Attractor` slowes down the ball and attracts to its
 To use the environment in Python programms you can install Python module `python_env/pinball.py` using `python_env/setup.py`.
 
 Control of the environment is through `Pinball` class:
-- `obs()` - returns image observation array
+- `obs()` - returns a tuple: (image observation array, reward, terminal state flag)
 - `act([phi float, m float])` - apply impulse with direction `phi` in radians and magnitude `m`
 - `step()` - do one simulation step if run with `--sync=true` flag
-- `reset()` - return ball to initial position and zero velocity
+- `reset(position=None)` - return ball to initial position and zero velocity, if position is not specified, it uses initial position from config file
 
 For more detailed API see the source code.
 
