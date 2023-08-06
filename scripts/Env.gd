@@ -169,6 +169,8 @@ func save_current_config(path):
 			]
 		rf_dict['strength'] = random_force.strength
 		rf_dict['angles'] = random_force.angles
+		rf_dict['reward'] = random_force.reward
+		rf_dict['terminal'] = random_force.terminal
 		
 		rf_dicts.append(rf_dict)
 	
@@ -183,10 +185,18 @@ func save_current_config(path):
 			]
 		att_dict['strength'] = attractor.strength
 		att_dict['freq'] = attractor.frequency
+		att_dict['reward'] = attractor.reward
+		att_dict['terminal'] = attractor.terminal
 		
 		att_dicts.append(att_dict)
 	
 	var config = {'rf': rf_dicts, 'att': att_dicts}
+	config['initial_ball_position'] = [
+		initial_ball_position.x,
+		initial_ball_position.y,
+		initial_ball_position.z
+	]
+	config['reward_decay'] = reward_decay
 	
 	var json_string = to_json(config)
 	
