@@ -1,1 +1,6 @@
-{"att":[],"rf":[]}
+{
+    "reward_decay": -0.001,
+    "intial_ball_position": [0, 0.779, 0],
+    "att":[],
+    "rf":[]
+}

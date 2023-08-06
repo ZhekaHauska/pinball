@@ -1,1 +1,14 @@
-{"att":[],"rf":[{"angles":[-80,80],"pos":[0,0.651958,-5.23591],"strength":2}]}
+{
+    "reward_decay": -0.001,
+    "initial_ball_position": [0, 0.779, 0],
+    "att":[],
+    "rf":[
+        {
+            "angles":[-80,80],
+            "pos":[0,0.651958,-5.23591],
+            "strength":2,
+            "reward": 0.0,
+            "terminal": false
+        }
+        ]
+}

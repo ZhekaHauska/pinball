@@ -1,1 +1,43 @@
-{"att":[{"freq":2,"pos":[-2.45889,0.776055,-1.25694],"strength":2},{"freq":2,"pos":[2.4205,0.776055,-1.28317],"strength":2}],"rf":[{"angles":[0,60,-60],"pos":[1.66883,0.681355,-3.62253],"strength":4},{"angles":[80,-80],"pos":[-0.043756,0.681355,-2.08874],"strength":2},{"angles":[180,70,-90],"pos":[-1.8202,0.681355,-3.5963],"strength":4}]}
+{
+    "reward_decay": -0.001,
+    "initial_ball_position": [0, 0.779, 0],
+    "att":[
+        {
+            "freq":2,
+            "pos":[-2.45889,0.776055,-1.25694],
+            "strength":2,
+            "reward": 0.0,
+            "terminal": false
+        },
+        {
+            "freq":2,
+            "pos":[2.4205,0.776055,-1.28317],
+            "strength":2,
+            "reward": 0.0,
+            "terminal": false
+        }
+        ],
+    "rf":[
+        {
+            "angles":[0,60,-60],
+            "pos":[1.66883,0.681355,-3.62253],
+            "strength":4,
+            "reward": 0.0,
+            "terminal": false
+        },
+        {
+            "angles":[80,-80],
+            "pos":[-0.043756,0.681355,-2.08874],
+            "strength":2,
+            "reward": 0.0,
+            "terminal": false
+        },
+        {
+            "angles":[180,70,-90],
+            "pos":[-1.8202,0.681355,-3.5963],
+            "strength":4,
+            "reward": 0.0,
+            "terminal": false
+        }
+        ]
+}
