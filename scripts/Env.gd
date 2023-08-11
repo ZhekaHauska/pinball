@@ -272,9 +272,12 @@ func connect_to_server(ip, port):
 	client = StreamPeerTCP.new()
 	
 	var connect = client.connect_to_host(ip, port)
+	if connect != OK:
+		print("Failed connecting to sever!")
 	
-	print(connect, client.get_status())
-	return client.get_status() == 2
+	var connected = client.is_connected_to_host()
+	print("Connected: ", connected)
+	return connected
 
 func _send_dict_as_json_message(dict):
 	client.put_string(to_json(dict))
