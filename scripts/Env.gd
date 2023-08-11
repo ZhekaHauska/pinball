@@ -208,9 +208,9 @@ func save_current_config(path):
 
 func setup_environment(config_dict):
 	for rf_instance in $RandomForces.get_children():
-		$RandomForces.remove_child(rf_instance)
+		rf_instance.queue_free()
 	for att_instance in $Attractors.get_children():
-		$Attractors.remove_child(att_instance)
+		att_instance.queue_free()
 	
 	initial_ball_position = Vector3(
 		config_dict['initial_ball_position'][0],
