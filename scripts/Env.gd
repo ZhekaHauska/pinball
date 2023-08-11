@@ -69,23 +69,20 @@ func _ready():
 		int(args.get('port', DEFAULT_PORT))
 	)
 	
-	if connected:
-		print('connected')
-		
-		config_path = args.get('config', null)
-		if config_path:
-			config_dict = load_json_data(config_path)
-			if config_dict:
-				setup_environment(config_dict)
-			else:
-				print('config file not found')
-	else:
-		print('connection failed')
-		
-		if not VisualServer.render_loop_enabled:
-			get_tree().quit()
-		else:
-			$GUI/Settings.popup()
+	if not connected:
+		quit()
+		return
+
+	config_path = args.get('config', null)
+	if config_path:
+		config_dict = load_json_data(config_path)
+		if not config_dict:
+			print('Config file not found: ', config_path)
+			quit()
+			return
+		setup_environment(config_dict)
+	
+	print('Environment is ready for use')
 	
 func _input(event):
 	if Input.is_action_just_pressed("reset"):
@@ -95,22 +92,20 @@ func _input(event):
 	if Input.is_action_just_pressed("settings"):
 		$GUI/Settings.popup()
 		
-func _process(delta):	
-	if connected:
-		
-		var message = _get_dict_json_message()
-		
-		if wait_client:
-			while message:
-				_message_handler(message)
-				
-				if message['type'] == 'step':
-					break
-					
-				message = _get_dict_json_message()
-		else:
-			if message:
-				_message_handler(message)
+func _process(delta):
+	if not connected:
+		return
+
+	var message = _get_dict_json_message()
+	if wait_client:
+		while message:
+			_message_handler(message)
+			if message['type'] == 'step':
+				break
+			message = _get_dict_json_message()
+	else:
+		if message:
+			_message_handler(message)
 	
 	if terminate:
 		reset()
@@ -137,22 +132,19 @@ func reset(position=null):
 
 func load_json_data(path):
 	var file = File.new()
-	
 	file.open(path, File.READ)
 	
-	if file.is_open():
-		var json_string = file.get_as_text()
-		
-		var parse_result = JSON.parse(json_string)
-		
-		var parse_data = parse_result.result
-		
-		file.close()
-		
-		return parse_data
-	else:
+	if not file.is_open():
 		return null
-	
+
+	var json_string = file.get_as_text()
+	var parse_result = JSON.parse(json_string)
+	var parse_data = parse_result.result
+
+	file.close()
+
+	return parse_data
+
 # load and save configs
 func save_current_config(path):
 	var random_forces = $RandomForces.get_children()
@@ -163,10 +155,10 @@ func save_current_config(path):
 		var rf_dict = {}
 		
 		rf_dict['pos'] = [
-				random_force.translation.x,
-				random_force.translation.y,
-				random_force.translation.z
-			]
+			random_force.translation.x,
+			random_force.translation.y,
+			random_force.translation.z
+		]
 		rf_dict['strength'] = random_force.strength
 		rf_dict['angles'] = random_force.angles
 		rf_dict['reward'] = random_force.reward
@@ -179,10 +171,10 @@ func save_current_config(path):
 		var att_dict = {}
 		
 		att_dict['pos'] = [
-				attractor.translation.x,
-				attractor.translation.y,
-				attractor.translation.z
-			]
+			attractor.translation.x,
+			attractor.translation.y,
+			attractor.translation.z
+		]
 		att_dict['strength'] = attractor.strength
 		att_dict['freq'] = attractor.frequency
 		att_dict['reward'] = attractor.reward
@@ -224,10 +216,10 @@ func setup_environment(config_dict):
 	for random_force in random_forces:
 		var rf_instance = rf_scene.instance() 
 		rf_instance.translation = Vector3(
-				random_force['pos'][0],
-				random_force['pos'][1],
-				random_force['pos'][2]
-			)
+			random_force['pos'][0],
+			random_force['pos'][1],
+			random_force['pos'][2]
+		)
 		rf_instance.strength = random_force['strength']
 		rf_instance.angles = random_force['angles']
 		rf_instance.reward = random_force['reward']
@@ -268,7 +260,7 @@ func _on_Browse_pressed():
 func connect_to_server(ip, port):
 	print("Waiting for one second to allow server to start")
 	OS.delay_msec(1000)
-	print("trying to connect to server")
+	print("Trying to connect to server")
 	client = StreamPeerTCP.new()
 	
 	var connect = client.connect_to_host(ip, port)
@@ -279,19 +271,25 @@ func connect_to_server(ip, port):
 	print("Connected: ", connected)
 	return connected
 
+func quit():
+	if not VisualServer.render_loop_enabled:
+		get_tree().quit()
+	else:
+		$GUI/Settings.popup()
+
 func _send_dict_as_json_message(dict):
 	client.put_string(to_json(dict))
 
-func _get_dict_json_message():	
+func _get_dict_json_message():
 	while client.get_available_bytes() == 0:
 		if client.get_status() == 3:
 			print("server disconnected status 3, closing")
-			get_tree().quit()
+			quit()
 			return null
 
 		if !client.is_connected_to_host():
 			print("server disconnected, closing")
-			get_tree().quit()
+			quit()
 			return null
 		OS.delay_usec(10)
 		
