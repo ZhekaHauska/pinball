@@ -4,8 +4,11 @@
 export_presets.cfg
 builds/*
 *.blend
-python_env/.idea/*
+.idea
+.DS_Store
 __pycache__
 *.egg-info
 *.pck
 Pinball.x86_64
+pinball.app
+Pinball.app
