@@ -7,8 +7,8 @@
             "angles":[-80,80,80,80],
             "pos":[0,0.651958,-5.23591],
             "strength":2,
-            "reward": 1.0,
-            "terminal": true
+            "reward": 0.0,
+            "terminal": false
         }
         ]
 }
