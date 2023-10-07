@@ -26,10 +26,8 @@ func _on_Attractor_body_entered(body):
 	
 	var agent = get_node('../../Agent')
 	agent.reward = reward
+	agent.terminated = terminal
 	agent.emit_signal('got_reward', agent.reward)
-	
-	if terminal:
-		get_node('../../../Env').terminate = true
 
 func _on_Attractor_body_exited(body):
 	$AnimationPlayer.play("RESET")
@@ -37,4 +35,5 @@ func _on_Attractor_body_exited(body):
 	
 	var agent = get_node('../../Agent')
 	agent.reward = 0
+	agent.terminated = false
 	agent.emit_signal('got_reward', agent.reward)

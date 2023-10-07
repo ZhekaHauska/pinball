@@ -14,7 +14,6 @@ var client: StreamPeerTCP = null
 var args = null
 var connected = false
 var wait_client = false
-var terminate = false
 var reward_decay = 0.0
 
 
@@ -92,28 +91,32 @@ func _input(event):
 	if Input.is_action_just_pressed("settings"):
 		$GUI/Settings.popup()
 		
-func _process(delta):
-	if not connected:
-		return
 
-	var message = _get_dict_json_message()
-	if wait_client:
-		while message:
-			_message_handler(message)
-			if message['type'] == 'step':
-				break
-			message = _get_dict_json_message()
+func _process(delta):	
+	if connected:
+		
+		var message = _get_dict_json_message()
+		
+		if wait_client:
+			while message:
+				_message_handler(message)
+				
+				if message['type'] == 'step':
+					break
+					
+				message = _get_dict_json_message()
+		else:
+			if message:
+				_message_handler(message)
 	else:
-		if message:
-			_message_handler(message)
-	
-	if terminate:
-		reset()
+		if $Agent.terminated:
+			reset()
+
 
 func reset(position=null):
 	$Agent.reward = 0
+	$Agent.terminated = false
 	$Agent.emit_signal("got_reward", 0)
-	terminate = false
 	
 	for att in $Attractors.get_children():
 		att.attracted_body = null
@@ -239,7 +242,7 @@ func setup_environment(config_dict):
 		att_instance.reward = attractor['reward']
 		att_instance.terminal = attractor['terminal']
 		
-		$RandomForces.add_child(att_instance)
+		$Attractors.add_child(att_instance)
 		
 func _set_sensor_size(size):
 	$RGBCameraSensor3D/Viewport.size = size
@@ -313,7 +316,7 @@ func _message_handler(message):
 			"obs": obs,
 			"shape": shape,
 			"reward": reward,
-			"is_terminal": terminate
+			"is_terminal": $Agent.terminated
 		}
 	
 		_send_dict_as_json_message(reply)

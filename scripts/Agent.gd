@@ -2,6 +2,7 @@ extends Spatial
 
 export var magnitude = 1.0
 var reward = 0.0
+var terminated = false
 var direction = Vector3.FORWARD
 signal magnitude_changed
 signal angle_changed
