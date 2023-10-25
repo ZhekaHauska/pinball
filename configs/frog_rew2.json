@@ -1,13 +1,93 @@
 {
-    "att":[
-        {"freq":2,"pos":[1.39313,0.776055,-7.36642],"reward":0,"strength":2,"terminal":false},
-        {"freq":2,"pos":[-1.34194,0.776055,-7.32099],"reward":0,"strength":2,"terminal":false}],
-        "initial_ball_position":[0,0.779,0],
-        "reward_decay":-0.01,
-    "rf":[
-        {"angles":[0,60,-60],"pos":[2.88714,0.681355,-5.37834],"reward":0,"strength":4,"terminal":false},
-        {"angles":[0,60,-60],"pos":[-2.69725,0.681355,-5.37834],"reward":1,"strength":4,"terminal":true},
-        {"angles":[90,-90],"pos":[-1.2,0.681355,-3],"reward":0,"strength":10,"terminal":false},
-        {"angles":[0,60,-60],"pos":[2.80844,0.681355,-2.25657],"reward":0,"strength":4,"terminal":false},
-        {"angles":[0,90,-60],"pos":[-2.56939,0.681355,-2.09917],"reward":0,"strength":4,"terminal":false}]
+  "att": [
+     {
+      "freq": 5,
+      "pos": [
+        -2.69725,
+        0.681355,
+        -5.37834
+      ],
+      "reward": 1,
+      "strength": 10,
+      "terminal": true
+    },
+    {
+      "freq": 2,
+      "pos": [
+        -1.34194,
+        0.776055,
+        -7.32099
+      ],
+      "reward": 0,
+      "strength": 2,
+      "terminal": false
+    }
+  ],
+  "initial_ball_position": [
+    0,
+    0.779,
+    0
+  ],
+  "reward_decay": -0.01,
+  "rf": [
+    {
+      "angles": [
+        0,
+        60,
+        -60
+      ],
+      "pos": [
+        2.88714,
+        0.681355,
+        -5.37834
+      ],
+      "reward": 0,
+      "strength": 4,
+      "terminal": false
+    },
+    {
+      "angles": [
+        90,
+        -90
+      ],
+      "pos": [
+        -1.2,
+        0.681355,
+        -3
+      ],
+      "reward": 0,
+      "strength": 10,
+      "terminal": false
+    },
+    {
+      "angles": [
+        0,
+        60,
+        -60
+      ],
+      "pos": [
+        2.80844,
+        0.681355,
+        -2.25657
+      ],
+      "reward": 0,
+      "strength": 4,
+      "terminal": false
+    },
+    {
+      "angles": [
+        0,
+        90,
+        -60
+      ],
+      "pos": [
+        -2.56939,
+        0.681355,
+        -2.09917
+      ],
+      "reward": 0,
+      "strength": 4,
+      "terminal": false
+    }
+  ]
 }
