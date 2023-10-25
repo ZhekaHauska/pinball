@@ -21,6 +21,9 @@ func _process(delta):
 			delay += delta
 
 func _on_Attractor_body_entered(body):
+	if body is StaticBody:
+		return
+		
 	$AnimationPlayer.play("interact")
 	attracted_body = body
 	

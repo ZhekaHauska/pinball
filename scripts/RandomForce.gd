@@ -7,6 +7,9 @@ export var terminal = false
 
 
 func _on_ForceArea_body_entered(body):
+	if body is StaticBody:
+		return
+		
 	$AnimationPlayer.play("interact")
 	
 	var agent = get_node("../../Agent")
