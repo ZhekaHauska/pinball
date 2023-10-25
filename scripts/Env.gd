@@ -94,16 +94,12 @@ func _input(event):
 
 func _process(delta):	
 	if connected:
-		
 		var message = _get_dict_json_message()
-		
 		if wait_client:
 			while message:
 				_message_handler(message)
-				
 				if message['type'] == 'step':
 					break
-					
 				message = _get_dict_json_message()
 		else:
 			if message:
@@ -267,10 +263,15 @@ func connect_to_server(ip, port):
 	client = StreamPeerTCP.new()
 	
 	var connect = client.connect_to_host(ip, port)
-	if connect != OK:
+	var status = client.get_status()
+
+	while status <= 1:
+		status = client.get_status()
+	
+	var connected = status == 2
+	if not connected:
 		print("Failed connecting to sever!")
 	
-	var connected = client.is_connected_to_host()
 	print("Connected: ", connected)
 	return connected
 
@@ -346,3 +347,4 @@ func _message_handler(message):
 		var size = Vector2(sizex, sizey)
 		
 		_set_sensor_size(size) 
+
