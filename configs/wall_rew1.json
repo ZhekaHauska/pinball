@@ -1,1 +1,32 @@
-{"att":[{"freq":5,"pos":[-1.99706,0.615433,-7.62539],"reward":1,"strength":5,"terminal":true}],"initial_ball_position":[0,0.779,0],"reward_decay":0,"rf":[],"wall":[{"angle":0,"length":5,"pos":[0,0.104]}]}
+{
+  "att": [
+    {
+      "freq": 5,
+      "pos": [
+        -2.8007,
+        0.615433,
+        -6.40448
+      ],
+      "reward": 1,
+      "strength": 5,
+      "terminal": true
+    }
+  ],
+  "initial_ball_position": [
+    -2.82097,
+    0.779,
+    -3.33108
+  ],
+  "reward_decay": -0.01,
+  "rf": [],
+  "wall": [
+    {
+      "angle": 0,
+      "length": 5,
+      "pos": [
+        0,
+        0.104
+      ]
+    }
+  ]
+}

@@ -194,9 +194,9 @@ func save_current_config(path):
 	
 	var config = {'rf': rf_dicts, 'att': att_dicts, 'wall': wall_dicts}
 	config['initial_ball_position'] = [
-		initial_ball_position.x,
-		initial_ball_position.y,
-		initial_ball_position.z
+		$Ball.translation.x,
+		$Ball.translation.y,
+		$Ball.translation.z
 	]
 	config['reward_decay'] = reward_decay
 	
