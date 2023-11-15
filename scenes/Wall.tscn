@@ -1,0 +1,20 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://scripts/Wall.gd" type="Script" id=1]
+
+[sub_resource type="SpatialMaterial" id=7]
+emission_enabled = true
+emission = Color( 0.701961, 0.631373, 0.533333, 1 )
+emission_energy = 0.39
+emission_operator = 0
+emission_on_uv2 = false
+
+[node name="Wall" type="Spatial"]
+script = ExtResource( 1 )
+
+[node name="CSGBox" type="CSGBox" parent="."]
+transform = Transform( -4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -1.36189, 0.00224757, -4.91691 )
+use_collision = true
+width = 0.269
+depth = 5.51287
+material = SubResource( 7 )

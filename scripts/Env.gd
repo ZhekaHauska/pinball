@@ -9,6 +9,7 @@ var config_dict = null
 
 var rf_scene = load("res://scenes/RandomForce.tscn")
 var att_scene = load("res://scenes/Attractor.tscn")
+var wall_scene = load("res://scenes/Wall.tscn")
 
 var client: StreamPeerTCP = null
 var args = null
@@ -148,6 +149,7 @@ func load_json_data(path):
 func save_current_config(path):
 	var random_forces = $RandomForces.get_children()
 	var attractors = $Attractors.get_children()
+	var walls = $Walls.get_children()
 	
 	var rf_dicts = []
 	for random_force in random_forces:
@@ -181,7 +183,16 @@ func save_current_config(path):
 		
 		att_dicts.append(att_dict)
 	
-	var config = {'rf': rf_dicts, 'att': att_dicts}
+	var wall_dicts = []
+	for wall in walls:
+		var wall_dict = {}
+		wall_dict['pos'] = [wall.pos.x, wall.pos.y]
+		wall_dict['angle'] = wall.angle
+		wall_dict['length'] = wall.length
+		
+		wall_dicts.append(wall_dict)
+	
+	var config = {'rf': rf_dicts, 'att': att_dicts, 'wall': wall_dicts}
 	config['initial_ball_position'] = [
 		initial_ball_position.x,
 		initial_ball_position.y,
@@ -202,6 +213,8 @@ func setup_environment(config_dict):
 		rf_instance.queue_free()
 	for att_instance in $Attractors.get_children():
 		att_instance.queue_free()
+	for wall_instance in $Walls.get_children():
+		wall_instance.queue_free()
 	
 	initial_ball_position = Vector3(
 		config_dict['initial_ball_position'][0],
@@ -211,6 +224,7 @@ func setup_environment(config_dict):
 	reward_decay = config_dict['reward_decay']
 	var random_forces = config_dict['rf']
 	var attractors = config_dict['att']
+	var walls = config_dict['wall']
 	
 	for random_force in random_forces:
 		var rf_instance = rf_scene.instance() 
@@ -239,6 +253,17 @@ func setup_environment(config_dict):
 		att_instance.terminal = attractor['terminal']
 		
 		$Attractors.add_child(att_instance)
+	
+	for wall in walls:
+		var wall_instance = wall_scene.instance()
+		wall_instance.pos = Vector2(
+			wall['pos'][0],
+			wall['pos'][1]
+		)
+		wall_instance.angle = wall['angle']
+		wall_instance.length = wall['length']
+		
+		$Walls.add_child(wall_instance)
 		
 func _set_sensor_size(size):
 	$RGBCameraSensor3D/Viewport.size = size
